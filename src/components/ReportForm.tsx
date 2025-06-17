@@ -15,7 +15,6 @@ import ExifReader from 'exifreader';
 import { AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
@@ -59,7 +58,6 @@ export const ReportForm = ({ onReportSubmitted, onClose }: ReportFormProps) => {
     lat: number;
     lon: number;
   } | null>(null);
-  const { data: session } = useSession();
 
   const resetForm = () => {
     setDescription('');
