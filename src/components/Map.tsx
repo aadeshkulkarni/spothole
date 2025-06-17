@@ -7,7 +7,13 @@ import { AngryIcon, MessageCircle, SendHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import {
+    MapContainer,
+    Marker,
+    Popup,
+    TileLayer,
+    useMap,
+} from 'react-leaflet';
 import { LoginDialog } from './LoginDialog';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
@@ -204,6 +210,33 @@ const PotholePopup = ({ pothole }: { pothole: Pothole }) => {
   );
 };
 
+function CenterMapOnPopup() {
+  const map = useMap();
+
+  useEffect(() => {
+    const handlePopupOpen = (e: L.PopupEvent) => {
+      // Check for mobile screen size
+      if (window.innerWidth < 768) {
+        const latLng = e.popup.getLatLng();
+        if (latLng) {
+          map.flyTo(latLng, map.getZoom(), {
+            animate: true,
+            duration: 1,
+          });
+        }
+      }
+    };
+
+    map.on('popupopen', handlePopupOpen);
+
+    return () => {
+      map.off('popupopen', handlePopupOpen);
+    };
+  }, [map]);
+
+  return null;
+}
+
 const Map = ({ potholes }: MapProps) => {
   const position: LatLngExpression = [20.5937, 78.9629]; // Default center of India
 
@@ -213,6 +246,7 @@ const Map = ({ potholes }: MapProps) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <CenterMapOnPopup />
 
       {potholes.map((pothole) => (
         <Marker

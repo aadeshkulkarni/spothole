@@ -1,13 +1,15 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import dbConnect from '@/lib/dbConnect';
 import Pothole from '@/models/Pothole';
 import User from '@/models/User';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+type Params = Promise<{ id: string }>;
+
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Params }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -17,7 +19,7 @@ export async function POST(
   await dbConnect();
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const pothole = await Pothole.findById(id);
     if (!pothole) {
       return NextResponse.json({ message: 'Pothole not found' }, { status: 404 });
@@ -65,10 +67,12 @@ export async function POST(
   }
 }
 
+
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  { params }: { params: Params }
 ) {
+  const { id } = await params;
   await dbConnect();
 
   try {
@@ -77,7 +81,7 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '5', 10);
     const skip = (page - 1) * limit;
 
-    const { id } = params;
+
     const pothole = await Pothole.findById(id)
       .populate({
         path: 'comments',

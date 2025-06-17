@@ -1,13 +1,15 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import dbConnect from '@/lib/dbConnect';
 import Pothole from '@/models/Pothole';
 import User from '@/models/User';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+type Params = Promise<{ id: string }>;
+
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Params }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
@@ -17,7 +19,8 @@ export async function POST(
   await dbConnect();
 
   try {
-    const pothole = await Pothole.findById(params.id);
+    const { id } = await params;
+    const pothole = await Pothole.findById(id);
     if (!pothole) {
       return NextResponse.json({ message: 'Pothole not found' }, { status: 404 });
     }
