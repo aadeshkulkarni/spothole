@@ -65,7 +65,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error in POST /api/potholes/[id]/comments:', error);
+    console.log('Error in POST /api/potholes/[id]/comments:', error);
     return NextResponse.json(
       { success: false, message: 'Server Error' },
       { status: 500 }
@@ -115,7 +115,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error in GET /api/potholes/[id]/comments:', error);
+    console.log('Error in GET /api/potholes/[id]/comments:', error);
     return NextResponse.json(
       { success: false, message: 'Server Error' },
       { status: 500 }

@@ -21,7 +21,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return NextResponse.json(
       { success: false, message: 'Server Error' },
       { status: 500 }
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: pothole }, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     // A more specific error could be returned based on the error type
     return NextResponse.json(
       { success: false, message: 'Server Error' },

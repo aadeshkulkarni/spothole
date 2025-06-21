@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { AngryIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
@@ -89,8 +89,8 @@ const Header = ({
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button onClick={handleReportClick}>
-                      <AngryIcon className="h-5 w-5" />
-                      Report Pothole
+                      <PlusIcon size={20} />
+                      Pothole
                     </Button>
                   </DialogTrigger>
                   <ReportForm

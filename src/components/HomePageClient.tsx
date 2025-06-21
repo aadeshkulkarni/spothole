@@ -67,7 +67,7 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
   }, []);
 
   return (
-    <main className="relative h-screen w-screen">
+    <main className="relative h-[100dvh] w-screen">
       <AnimatePresence>
         {showSplash && <SplashScreen />}
         {showIntro && <AppIntro onEnter={handleIntroDismiss} />}

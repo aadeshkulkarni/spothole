@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, url: presignedUrl, key: key });
   } catch (error) {
-    console.error('Error creating presigned URL:', error);
+    console.log('Error creating presigned URL:', error);
     return NextResponse.json(
       { success: false, message: 'Error creating presigned URL.' },
       { status: 500 }

@@ -80,7 +80,7 @@ const PotholePopup = ({ pothole }: { pothole: Pothole }) => {
         setHasMore(data.hasMore);
       }
     } catch (error) {
-      console.error('Failed to fetch comments', error);
+      console.log('Failed to fetch comments', error);
     }
   };
 
@@ -103,7 +103,7 @@ const PotholePopup = ({ pothole }: { pothole: Pothole }) => {
         setHasUpvoted(!hasUpvoted);
       }
     } catch (error) {
-      console.error('Failed to upvote', error);
+      console.log('Failed to upvote', error);
     }
   };
 
@@ -122,7 +122,7 @@ const PotholePopup = ({ pothole }: { pothole: Pothole }) => {
         setNewComment('');
       }
     } catch (error) {
-      console.error('Failed to submit comment', error);
+      console.log('Failed to submit comment', error);
     } finally {
       setIsSubmitting(false);
     }

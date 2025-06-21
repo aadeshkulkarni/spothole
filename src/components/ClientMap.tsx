@@ -32,7 +32,7 @@ const ClientMap = ({ initialPotholes, onMapReady }: ClientMapProps) => {
         'potholes.'
       );
     } catch (error) {
-      console.error('Failed to refresh map data:', error);
+      console.log('Failed to refresh map data:', error);
     }
   }, []);
 

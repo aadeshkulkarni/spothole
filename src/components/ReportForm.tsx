@@ -205,7 +205,11 @@ export const ReportForm = ({ onReportSubmitted, onClose }: ReportFormProps) => {
         );
         dispatch({ type: 'SET_ADDRESS', payload: formattedAddress });
       };
-      fetchAddress();
+      try {
+        fetchAddress();
+      } catch (ex) {
+        console.log('Failed to fetch address', ex);
+      }
     }
   }, [location]);
 
@@ -334,8 +338,13 @@ export const ReportForm = ({ onReportSubmitted, onClose }: ReportFormProps) => {
     }
   };
 
+  const handleCancel = () => {
+    dispatch({ type: 'RESET' });
+    onClose();
+  };
+
   return (
-    <DialogContent className="max-h-[90vh] grid-rows-[auto,1fr,auto] overflow-y-auto sm:max-w-[480px]">
+    <DialogContent className="max-h-[100dvh] grid-rows-[auto,1fr,auto] overflow-y-auto sm:max-w-[480px]">
       <AnimatePresence>
         {status === 'submitting' && <ReportLoadingScreen />}
       </AnimatePresence>
@@ -393,7 +402,8 @@ export const ReportForm = ({ onReportSubmitted, onClose }: ReportFormProps) => {
             )}
             {location && (
               <p className="py-1 text-xs">
-                Lat: {location.lat.toFixed(5)}, Lon: {location.lon.toFixed(5)}
+                Lat: {location?.lat?.toFixed(5)}, Lon:{' '}
+                {location?.lon?.toFixed(5)}
               </p>
             )}
 
@@ -462,10 +472,10 @@ export const ReportForm = ({ onReportSubmitted, onClose }: ReportFormProps) => {
           />
         </div>
       </div>
+      {error && <p className="mr-auto text-sm text-red-500">{error}</p>}
 
       <DialogFooter>
-        {error && <p className="mr-auto text-sm text-red-500">{error}</p>}
-        <Button type="button" onClick={onClose} variant={'outline'}>
+        <Button type="button" onClick={handleCancel} variant={'outline'}>
           Cancel
         </Button>
         <Button type="submit" onClick={handleSubmit} disabled={!isFormValid()}>

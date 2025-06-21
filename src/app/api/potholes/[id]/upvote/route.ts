@@ -62,7 +62,7 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return NextResponse.json(
       { success: false, message: 'Server Error' },
       { status: 500 }

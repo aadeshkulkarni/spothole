@@ -17,7 +17,7 @@ async function getPotholes() {
     // Mongoose documents are not plain objects, so we need to serialize them
     return JSON.parse(JSON.stringify(potholes));
   } catch (error) {
-    console.error('Failed to fetch potholes for server component', error);
+    console.log('Failed to fetch potholes for server component', error);
     return [];
   }
 }

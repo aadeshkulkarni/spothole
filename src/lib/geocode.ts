@@ -35,7 +35,7 @@ export async function reverseGeocode(
     }
     return 'Could not find address for this location.';
   } catch (error) {
-    console.error('Reverse geocoding failed:', error);
+    console.log('Reverse geocoding failed:', error);
     return 'Failed to fetch address details.';
   }
 }
