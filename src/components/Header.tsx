@@ -59,7 +59,7 @@ const Header = ({
   };
 
   return (
-    <header className="absolute top-0 right-0 left-0 z-10 bg-white/70 shadow-xl backdrop-blur-sm">
+    <header className="fixed top-0 right-0 left-0 z-10 bg-white/70 shadow-xl backdrop-blur-sm">
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-end justify-end gap-2">

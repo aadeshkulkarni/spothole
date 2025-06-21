@@ -171,7 +171,7 @@ export const ReportModal = ({
               <div className="flex text-sm text-gray-600">
                 <label
                   htmlFor="image"
-                  className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 focus-within:outline-none hover:text-blue-500"
+                  className="relative cursor-pointer rounded-md bg-white font-medium text-sky-600 focus-within:ring-2 focus-within:ring-sky-500 focus-within:ring-offset-2 focus-within:outline-none hover:text-sky-500"
                 >
                   <span>Upload a file</span>
                   <input
@@ -207,7 +207,7 @@ export const ReportModal = ({
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-transparent focus:ring-2 focus:ring-sky-500 focus:outline-none"
             placeholder="e.g., 'Large pothole near the bus stop'"
           ></textarea>
         </div>

@@ -45,14 +45,14 @@ const AppIntro = ({ onEnter }: AppIntroProps) => {
               helps build a safer, smoother, and better India for everyone.
             </p>
           </div>
+          <Button
+            size="lg"
+            className="mt-8 w-full flex-shrink-0 px-8 py-6 text-lg font-bold tracking-widest text-gray-100 uppercase md:w-auto"
+            onClick={onEnter}
+          >
+            Enter
+          </Button>
         </div>
-        <Button
-          size="lg"
-          className="mt-8 w-full flex-shrink-0 px-8 py-6 text-lg font-bold tracking-widest text-gray-100 uppercase md:w-auto"
-          onClick={onEnter}
-        >
-          Enter
-        </Button>
       </motion.div>
     </motion.div>
   );

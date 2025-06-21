@@ -38,9 +38,9 @@ const ReportLoadingScreen = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80 p-8 text-center backdrop-blur-sm"
+      className="absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center bg-white p-8 text-center backdrop-blur-sm"
     >
-      <div className="mb-8 h-16 w-16 animate-spin rounded-full border-4 border-dashed border-blue-500"></div>
+      <div className="mb-8 h-16 w-16 animate-spin rounded-full border-4 border-dashed border-sky-500"></div>
       <AnimatePresence mode="wait">
         <motion.p
           key={quote}
