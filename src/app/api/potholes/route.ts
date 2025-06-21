@@ -9,12 +9,17 @@ export async function GET() {
   await dbConnect();
 
   try {
-    const potholes = await Pothole.find({}).populate({
-      path: 'reportedBy',
-      model: User,
-      select: 'name',
-    }).sort({ createdAt: -1 });
-    return NextResponse.json({ success: true, data: potholes }, { status: 200 });
+    const potholes = await Pothole.find({})
+      .populate({
+        path: 'reportedBy',
+        model: User,
+        select: 'name',
+      })
+      .sort({ createdAt: -1 });
+    return NextResponse.json(
+      { success: true, data: potholes },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

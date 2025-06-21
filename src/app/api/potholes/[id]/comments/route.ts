@@ -7,10 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ id: string }>;
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Params }
-) {
+export async function POST(req: NextRequest, { params }: { params: Params }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -22,12 +19,18 @@ export async function POST(
     const { id } = await params;
     const pothole = await Pothole.findById(id);
     if (!pothole) {
-      return NextResponse.json({ message: 'Pothole not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Pothole not found' },
+        { status: 404 }
+      );
     }
 
     const { text } = await req.json();
     if (!text) {
-      return NextResponse.json({ message: 'Comment text is required' }, { status: 400 });
+      return NextResponse.json(
+        { message: 'Comment text is required' },
+        { status: 400 }
+      );
     }
 
     const newCommentData = {
@@ -54,10 +57,13 @@ export async function POST(
         _id: session.user.id,
         name: session.user.name,
         image: session.user.image,
-      }
-    }
+      },
+    };
 
-    return NextResponse.json({ success: true, data: populatedComment }, { status: 201 });
+    return NextResponse.json(
+      { success: true, data: populatedComment },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error in POST /api/potholes/[id]/comments:', error);
     return NextResponse.json(
@@ -67,11 +73,7 @@ export async function POST(
   }
 }
 
-
-export async function GET(
-  req: Request,
-  { params }: { params: Params }
-) {
+export async function GET(req: Request, { params }: { params: Params }) {
   const { id } = await params;
   await dbConnect();
 
@@ -81,19 +83,20 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '5', 10);
     const skip = (page - 1) * limit;
 
-
-    const pothole = await Pothole.findById(id)
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'user',
-          model: User,
-          select: 'name image'
-        }
-      });
+    const pothole = await Pothole.findById(id).populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+        model: User,
+        select: 'name image',
+      },
+    });
 
     if (!pothole) {
-      return NextResponse.json({ message: 'Pothole not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Pothole not found' },
+        { status: 404 }
+      );
     }
 
     // Ensure comments array exists for older documents
@@ -103,12 +106,14 @@ export async function GET(
 
     const comments = [...pothole.comments].reverse().slice(skip, skip + limit);
 
-    return NextResponse.json({
+    return NextResponse.json(
+      {
         success: true,
         data: comments,
-        hasMore: pothole.comments.length > skip + limit
-    }, { status: 200 });
-
+        hasMore: pothole.comments.length > skip + limit,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error in GET /api/potholes/[id]/comments:', error);
     return NextResponse.json(

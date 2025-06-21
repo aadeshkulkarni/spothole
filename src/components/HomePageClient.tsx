@@ -33,7 +33,7 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
       if (!hasSeenIntro) {
         setShowIntro(true);
       }
-    }, 5000); // Show splash for 5 seconds
+    }, 2000); // Show splash for 2 seconds
 
     return () => clearTimeout(splashTimer);
   }, []);
@@ -43,7 +43,11 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
       setIsModalOpen(true);
       // Clean up the URL
       const newUrl = window.location.pathname;
-      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl
+      );
     }
   }, [searchParams]);
 

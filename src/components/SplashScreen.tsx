@@ -9,7 +9,7 @@ const SplashScreen = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+      className="fixed inset-0 top-0 left-0 z-50 flex items-center justify-center bg-white"
     >
       <div className="text-center">
         <motion.div
@@ -19,7 +19,7 @@ const SplashScreen = () => {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-20 w-20 mx-auto text-sky-600 animate-bounce"
+            className="mx-auto h-20 w-20 animate-bounce text-sky-600"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -34,9 +34,9 @@ const SplashScreen = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
-          className="mt-6 text-4xl font-bold text-gray-800 tracking-tight"
+          className="mt-6 text-4xl font-bold tracking-tight text-gray-800"
         >
-          SpotHole
+          Spothole
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

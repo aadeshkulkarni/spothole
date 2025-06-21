@@ -10,7 +10,7 @@ interface ClientMapProps {
 }
 
 const Map = dynamic(() => import('@/components/Map'), {
-  loading: () => <p className="text-center mt-10">Loading map...</p>,
+  loading: () => <p className="mt-10 text-center">Loading map...</p>,
   ssr: false,
 });
 
@@ -26,7 +26,11 @@ const ClientMap = ({ initialPotholes, onMapReady }: ClientMapProps) => {
       }
       const result = await response.json();
       setPotholes(result.data);
-      console.log('Map data refreshed. Found:', result.data.length, 'potholes.');
+      console.log(
+        'Map data refreshed. Found:',
+        result.data.length,
+        'potholes.'
+      );
     } catch (error) {
       console.error('Failed to refresh map data:', error);
     }

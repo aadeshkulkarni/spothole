@@ -7,10 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ id: string }>;
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Params }
-) {
+export async function POST(req: NextRequest, { params }: { params: Params }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -22,7 +19,10 @@ export async function POST(
     const { id } = await params;
     const pothole = await Pothole.findById(id);
     if (!pothole) {
-      return NextResponse.json({ message: 'Pothole not found' }, { status: 404 });
+      return NextResponse.json(
+        { message: 'Pothole not found' },
+        { status: 404 }
+      );
     }
 
     const user = await User.findOne({ email: session.user.email });

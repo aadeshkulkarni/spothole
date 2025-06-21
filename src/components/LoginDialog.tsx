@@ -22,20 +22,17 @@ export const LoginDialog = ({ isOpen, onOpenChange }: LoginDialogProps) => {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-col items-center">
-          <MapPinCheckInsideIcon className="h-16 w-16 text-blue-800 fill-blue-800 stroke-white" />
+          <MapPinCheckInsideIcon className="h-16 w-16 fill-blue-800 stroke-white text-blue-800" />
           <DialogTitle className="text-center text-2xl font-bold">
-            Like this? You'll love <strong className="text-blue-800">SpotHole</strong>
+            Like this? You'll love{' '}
+            <strong className="text-blue-800">Spothole</strong>
           </DialogTitle>
           <DialogDescription className="text-center">
             Sign up to upvote, reply and more.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={() => signIn('google')}
-          >
+          <Button size="lg" className="w-full" onClick={() => signIn('google')}>
             <Image
               src="/google-logo.svg"
               alt="Google Logo"
