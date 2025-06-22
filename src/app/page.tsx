@@ -2,6 +2,7 @@ import HomePageClient from '@/components/HomePageClient';
 import dbConnect from '@/lib/dbConnect';
 import Pothole from '@/models/Pothole';
 import type { Metadata } from 'next';
+import { unstable_noStore as noStore } from 'next/cache';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 async function getPotholes() {
+  noStore();
   await dbConnect();
   try {
     const potholes = await Pothole.find({}).sort({ createdAt: -1 }).lean();
