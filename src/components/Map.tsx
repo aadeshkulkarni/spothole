@@ -202,15 +202,15 @@ const Markers = ({
 interface MapProps {
   potholes: Pothole[];
   onMarkerClick: (pothole: Pothole) => void;
+  initialCenter: LatLngExpression;
 }
 
-const Map = ({ potholes, onMarkerClick }: MapProps) => {
-  const thaneMajiwada: LatLngExpression = [19.2076, 72.9645];
+const Map = ({ potholes, onMarkerClick, initialCenter }: MapProps) => {
   const initialZoom = 14;
 
   return (
     <MapContainer
-      center={thaneMajiwada}
+      center={initialCenter}
       zoom={initialZoom}
       zoomControl={false}
       style={{ height: '100vh', width: '100%' }}
@@ -220,7 +220,7 @@ const Map = ({ potholes, onMarkerClick }: MapProps) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <Markers potholes={potholes} onMarkerClick={onMarkerClick} />
-      <CustomControls center={thaneMajiwada} zoom={initialZoom} />
+      <CustomControls center={initialCenter} zoom={initialZoom} />
     </MapContainer>
   );
 };
