@@ -43,10 +43,10 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ip-api.com/json');
+        const response = await fetch('https://reallyfreegeoip.org/json/');
         const data = await response.json();
-        if (data.status === 'success' && data.lat && data.lon) {
-          setInitialCenter([data.lat, data.lon]);
+        if (data.latitude && data.longitude) {
+          setInitialCenter([data.latitude, data.longitude]);
         }
       } catch (error) {
         console.error('Failed to fetch IP-based location:', error);
