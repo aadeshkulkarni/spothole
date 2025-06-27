@@ -214,3 +214,47 @@
     color: #000 !important;
   }
 }
+
+.marker-cluster-small {
+  background-color: rgba(220, 38, 38, 0.6);
+}
+.marker-cluster-small div {
+  background-color: rgba(185, 28, 28, 0.6);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(153, 27, 27, 0.6);
+}
+.marker-cluster-medium div {
+  background-color: rgba(127, 29, 29, 0.6);
+}
+
+.marker-cluster-large {
+  background-color: rgba(127, 29, 29, 0.6);
+}
+.marker-cluster-large div {
+  background-color: rgba(91, 33, 33, 0.6);
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 50%;
+}
+.marker-cluster div {
+  width: 100%;
+  height: 100%;
+  margin-left: 0px;
+  margin-top: 0px;
+
+  text-align: center;
+  border-radius: 50%;
+  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  color: white;
+}
+.marker-cluster span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  line-height: 1;
+}

@@ -1,11 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IComment extends Document {
-  user: mongoose.Schema.Types.ObjectId;
-  text: string;
-  createdAt: Date;
-}
-
 export interface IPothole extends Document {
   location: {
     type: 'Point';
@@ -14,28 +8,10 @@ export interface IPothole extends Document {
   imageUrl: string;
   description?: string;
   status: 'Reported' | 'In Progress' | 'Resolved';
-  reportedBy: mongoose.Schema.Types.ObjectId; // Reference to User model
-  upvotes: mongoose.Schema.Types.ObjectId[]; // Array of user IDs
-  comments: IComment[];
+  severity: 'Minor' | 'Major' | 'Severe' | 'Critical';
   createdAt: Date;
   updatedAt: Date;
 }
-
-const CommentSchema: Schema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
 
 const PotholeSchema: Schema = new mongoose.Schema(
   {
@@ -62,19 +38,10 @@ const PotholeSchema: Schema = new mongoose.Schema(
       enum: ['Reported', 'In Progress', 'Resolved'],
       default: 'Reported',
     },
-    reportedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      // Not strictly required for now, can be added later
-      // required: true,
-    },
-    upvotes: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-      default: [],
-    },
-    comments: {
-      type: [CommentSchema],
-      default: [],
+    severity: {
+      type: String,
+      enum: ['Minor', 'Major', 'Severe', 'Critical'],
+      required: true,
     },
   },
   { timestamps: true }

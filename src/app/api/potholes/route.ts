@@ -1,21 +1,12 @@
-import { authOptions } from '@/lib/authOptions';
 import dbConnect from '@/lib/dbConnect';
 import Pothole from '@/models/Pothole';
-import User from '@/models/User';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
   await dbConnect();
 
   try {
-    const potholes = await Pothole.find({})
-      .populate({
-        path: 'reportedBy',
-        model: User,
-        select: 'name',
-      })
-      .sort({ createdAt: -1 });
+    const potholes = await Pothole.find({}).sort({ createdAt: -1 });
     return NextResponse.json(
       { success: true, data: potholes },
       { status: 200 }
@@ -34,18 +25,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { longitude, latitude, imageUrl, description } = body;
+    const { longitude, latitude, imageUrl, description, severity } = body;
 
     // Basic validation
-    if (!longitude || !latitude || !imageUrl) {
+    if (!longitude || !latitude || !imageUrl || !severity) {
       return NextResponse.json(
         { success: false, message: 'Missing required fields' },
         { status: 400 }
       );
     }
-
-    const session = await getServerSession(authOptions);
-    const user = await User.findOne({ email: session?.user?.email });
 
     const potholeData = {
       imageUrl,
@@ -54,7 +42,7 @@ export async function POST(req: NextRequest) {
         type: 'Point',
         coordinates: [longitude, latitude],
       },
-      reportedBy: user?._id,
+      severity,
     };
 
     const pothole = await Pothole.create(potholeData);

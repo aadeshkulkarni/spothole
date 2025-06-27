@@ -1,13 +1,18 @@
 'use client';
 
+import type { Pothole } from '@/types/pothole';
 import { AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'next/navigation';
+import { LatLngExpression } from 'leaflet';
+import { PlusIcon } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import AppIntro from './AppIntro';
 import ClientMap from './ClientMap';
 import Header from './Header';
-import type { Pothole } from './Map';
-import SplashScreen from './SplashScreen';
+import PotholeDetails from './PotholeDetails';
+import UploadDisclaimer from './UploadDisclaimer';
+import { Button } from './ui/button';
 
 interface HomePageClientProps {
   initialPotholes: Pothole[];
@@ -20,41 +25,37 @@ interface MapHandles {
 
 const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
   const mapRef = useRef<MapHandles | null>(null);
-  const [showSplash, setShowSplash] = useState(true);
+  const [selectedPothole, setSelectedPothole] = useState<Pothole | null>(null);
+  const [initialCenter, setInitialCenter] = useState<LatLngExpression>([
+    19.2076, 72.9645,
+  ]); // Default to Thane
   const [showIntro, setShowIntro] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showUploadDisclaimer, setShowUploadDisclaimer] = useState(false);
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
-
-    const splashTimer = setTimeout(() => {
-      setShowSplash(false);
-      if (!hasSeenIntro) {
-        setShowIntro(true);
-      }
-    }, 2000); // Show splash for 2 seconds
-
-    return () => clearTimeout(splashTimer);
-  }, []);
-
-  useEffect(() => {
-    if (searchParams.get('openReportDialog') === 'true') {
-      setIsModalOpen(true);
-      // Clean up the URL
-      const newUrl = window.location.pathname;
-      window.history.replaceState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        '',
-        newUrl
-      );
+    if (searchParams.get('upload') === 'success') {
+      toast.success('Pothole reported successfully!');
     }
   }, [searchParams]);
 
-  const handleIntroDismiss = () => {
-    setShowIntro(false);
-    sessionStorage.setItem('hasSeenIntro', 'true');
-  };
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch('http://ip-api.com/json');
+        const data = await response.json();
+        if (data.status === 'success' && data.lat && data.lon) {
+          setInitialCenter([data.lat, data.lon]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch IP-based location:', error);
+        // Keep the default location
+      }
+    };
+
+    fetchLocation();
+  }, []);
 
   const handleReportSubmitted = useCallback(() => {
     console.log('Report submitted, refreshing map...');
@@ -66,22 +67,60 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
     mapRef.current = methods;
   }, []);
 
+  const handleMarkerClick = (pothole: Pothole) => {
+    setSelectedPothole(pothole);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedPothole(null);
+  };
+
+  const handleLogoClick = () => {
+    setShowIntro(true);
+  };
+
+  const handleReportClick = () => {
+    setShowUploadDisclaimer(true);
+  };
+
+  const handleDisclaimerAgree = () => {
+    setShowUploadDisclaimer(false);
+    router.push('/upload?disclaimer=agreed');
+  };
+
   return (
     <main className="relative h-[100dvh] w-screen">
       <AnimatePresence>
-        {showSplash && <SplashScreen />}
-        {showIntro && <AppIntro onEnter={handleIntroDismiss} />}
+        {showIntro && <AppIntro onClose={() => setShowIntro(false)} />}
       </AnimatePresence>
-
-      <Header
-        onReportSubmitted={handleReportSubmitted}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
+      <Header onLogoClick={handleLogoClick} />
       <ClientMap
         initialPotholes={initialPotholes}
         onMapReady={handleMapReady}
+        onMarkerClick={handleMarkerClick}
+        initialCenter={initialCenter}
       />
+      {selectedPothole && (
+        <PotholeDetails pothole={selectedPothole} onClose={handleClosePopup} />
+      )}
+      <UploadDisclaimer
+        open={showUploadDisclaimer}
+        onOpenChange={setShowUploadDisclaimer}
+        onAgree={handleDisclaimerAgree}
+      />
+      <div className="fixed bottom-8 left-1/2 z-[1000] -translate-x-1/2">
+        <div className="relative overflow-hidden rounded-full p-[1px]">
+          <div className="animate-rotate absolute inset-0 h-full w-full rounded-full bg-[conic-gradient(#0ea5e9_20deg,transparent_120deg)]" />
+          <Button
+            size="lg"
+            className="relative w-full rounded-full shadow-lg"
+            onClick={handleReportClick}
+          >
+            <PlusIcon className="h-4 w-4 stroke-white stroke-2" />
+            Report a Pothole
+          </Button>
+        </div>
+      </div>
     </main>
   );
 };

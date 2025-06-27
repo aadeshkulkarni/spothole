@@ -1,58 +1,86 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Camera, MapPin, UploadCloud, X } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface AppIntroProps {
-  onEnter: () => void;
+  onClose: () => void;
 }
 
-const AppIntro = ({ onEnter }: AppIntroProps) => {
+const AppIntro = ({ onClose }: AppIntroProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed inset-0 top-0 left-0 z-40 flex items-center justify-center bg-white/80 backdrop-blur-md md:p-4"
+      className="fixed inset-0 z-[2100] flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm"
     >
       <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
-        className="mx-auto h-[100dvh] w-full max-w-full overflow-y-auto bg-white p-4 text-center shadow-2xl md:h-auto md:max-w-2xl md:rounded-lg md:p-8"
+        initial={{ scale: 0.9, y: -20 }}
+        animate={{ scale: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="relative w-full max-w-2xl rounded-lg bg-white p-4 text-center shadow-xl sm:p-8"
       >
-        <div className="flex h-full flex-col items-center justify-center">
-          <h1 className="p-4 text-4xl leading-10 font-light tracking-tight text-gray-800 md:p-0 md:text-4xl">
-            <span className="font-bold text-sky-600">Spothole</span>!
-          </h1>
-          <p className="mt-4 font-light text-gray-600 italic md:text-lg">
-            "The roads you know, deserve a glow!"
-          </p>
-          <div className="mt-6 space-y-4 text-left font-light text-gray-700">
-            <p className="wrap-break-word">
-              Spothole is a citizen-led movement to transform India's roads. We
-              believe that every citizen has the power to make a difference.
-            </p>
-            <p>
-              By simply snapping a photo of a pothole, you provide crucial data.
-              You can also comment on and upvote existing reports to highlight
-              the most urgent issues, creating a transparent and
-              community-driven record of road conditions.
-            </p>
-            <p>
-              Your contribution is vital. Every report, comment, and upvote
-              helps build a safer, smoother, and better India for everyone.
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-800"
+          aria-label="Close"
+        >
+          <X size={24} />
+        </button>
+
+        <h1 className="mb-4 text-3xl font-bold text-gray-800 sm:text-4xl">
+          Welcome to Spothole!
+        </h1>
+        <p className="mb-8 text-base text-gray-600 sm:text-lg">
+          A community-driven platform to report potholes and improve road safety
+          for everyone.
+        </p>
+
+        <div className="mb-10 grid grid-cols-1 gap-6 text-left sm:gap-8 md:grid-cols-3">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
+              <MapPin size={28} />
+            </div>
+            <h3 className="mb-2 text-base font-semibold sm:text-lg">
+              1. Spot a Pothole
+            </h3>
+            <p className="text-sm text-gray-500 sm:text-base">
+              Find a pothole that needs fixing.
             </p>
           </div>
-          <Button
-            size="lg"
-            className="mt-8 w-full flex-shrink-0 px-8 py-6 text-lg font-bold tracking-widest text-gray-100 uppercase md:w-auto"
-            onClick={onEnter}
-          >
-            Enter
-          </Button>
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
+              <Camera size={28} />
+            </div>
+            <h3 className="mb-2 text-base font-semibold sm:text-lg">
+              2. Snap a Photo
+            </h3>
+            <p className="text-sm text-gray-500 sm:text-base">
+              Take a clear, geotagged picture.
+            </p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
+              <UploadCloud size={28} />
+            </div>
+            <h3 className="mb-2 text-base font-semibold sm:text-lg">
+              3. Upload to Map
+            </h3>
+            <p className="text-sm text-gray-500 sm:text-base">
+              Help us put it on the map for all to see.
+            </p>
+          </div>
         </div>
+
+        <p className="mb-6 text-lg font-semibold text-gray-700 sm:text-xl">
+          Together, we can make our roads safer.
+        </p>
+
+        <Button onClick={onClose} size="lg" className="rounded-full">
+          Let's Go!
+        </Button>
       </motion.div>
     </motion.div>
   );

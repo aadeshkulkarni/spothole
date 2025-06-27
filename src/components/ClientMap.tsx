@@ -1,12 +1,15 @@
 'use client';
 
+import type { Pothole } from '@/types/pothole';
+import { LatLngExpression } from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
-import type { Pothole } from './Map';
 
 interface ClientMapProps {
   initialPotholes: Pothole[];
   onMapReady: (methods: { refresh: () => void }) => void;
+  onMarkerClick: (pothole: Pothole) => void;
+  initialCenter: LatLngExpression;
 }
 
 const Map = dynamic(() => import('@/components/Map'), {
@@ -14,7 +17,12 @@ const Map = dynamic(() => import('@/components/Map'), {
   ssr: false,
 });
 
-const ClientMap = ({ initialPotholes, onMapReady }: ClientMapProps) => {
+const ClientMap = ({
+  initialPotholes,
+  onMapReady,
+  onMarkerClick,
+  initialCenter,
+}: ClientMapProps) => {
   const [potholes, setPotholes] = useState<Pothole[]>(initialPotholes);
 
   const refreshMapData = useCallback(async () => {
@@ -40,7 +48,13 @@ const ClientMap = ({ initialPotholes, onMapReady }: ClientMapProps) => {
     onMapReady({ refresh: refreshMapData });
   }, [onMapReady, refreshMapData]);
 
-  return <Map potholes={potholes} />;
+  return (
+    <Map
+      potholes={potholes}
+      onMarkerClick={onMarkerClick}
+      initialCenter={initialCenter}
+    />
+  );
 };
 
 export default ClientMap;
