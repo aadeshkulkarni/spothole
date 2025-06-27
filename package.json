@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,json}\"",
-    "prepare": "husky"
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,json}\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.620.0",
