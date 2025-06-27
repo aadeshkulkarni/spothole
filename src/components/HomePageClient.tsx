@@ -40,6 +40,7 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
     }
   }, [searchParams]);
 
+  /*
   useEffect(() => {
     const fetchLocation = async () => {
       try {
@@ -56,6 +57,7 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
 
     fetchLocation();
   }, []);
+  */
 
   const handleReportSubmitted = useCallback(() => {
     console.log('Report submitted, refreshing map...');
