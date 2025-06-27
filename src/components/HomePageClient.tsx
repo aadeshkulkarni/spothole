@@ -111,17 +111,14 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
         onAgree={handleDisclaimerAgree}
       />
       <div className="fixed bottom-8 left-1/2 z-[1000] -translate-x-1/2">
-        <div className="relative overflow-hidden rounded-full p-[1px]">
-          <div className="animate-rotate absolute inset-0 h-full w-full rounded-full bg-[conic-gradient(#0ea5e9_20deg,transparent_120deg)]" />
           <Button
             size="lg"
-            className="relative w-full rounded-full shadow-lg"
+            className="relative z-10 w-full cursor-pointer rounded-full border-4 border-gray-100 shadow-lg"
             onClick={handleReportClick}
           >
             <PlusIcon className="h-4 w-4 stroke-white stroke-2" />
             Report a Pothole
           </Button>
-        </div>
       </div>
     </main>
   );

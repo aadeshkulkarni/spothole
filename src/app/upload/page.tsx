@@ -126,8 +126,8 @@ const UploadPageClient = () => {
           <div className="flex flex-grow items-center justify-center">
             <div className="mx-auto w-full max-w-[500px]">
               <div className="mb-8 text-center">
-                <h1 className="text-3xl font-bold">Upload your image</h1>
-                <div className="mt-4 border-l-4 border-blue-500 bg-blue-100 p-4 text-blue-700">
+                <h1 className="text-2xl font-bold">Upload your pothole image</h1>
+                <div className="mt-4 border-l-4 border-sky-200 bg-blue-50 p-4 text-sky-800">
                   <p>
                     Images you upload needs to be <strong>GEOTAGGED</strong>.
                     This will help us appropriately place your entry on the map.
