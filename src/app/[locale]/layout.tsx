@@ -5,8 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import { Toaster } from '@/components/ui/sonner';
 import { routing } from '@/i18n/routing';
 import type { Metadata } from 'next';
-import { NextIntlClientProvider, hasLocale } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import '../globals.css';
@@ -62,13 +62,16 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: 'en' | 'hi' }>;
 }) {
   const { locale } = await params;
-  // Validate that the incoming `locale` parameter is valid
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
+
+  setRequestLocale(locale);
+
+    // Validate that the incoming `locale` parameter is valid
+    if (!hasLocale(routing.locales, locale)) {
+      notFound();
+    }
 
   const messages = await getMessages();
 
