@@ -1,0 +1,48 @@
+{
+  "AppIntro": {
+    "welcomeTitle": "Welcome to Spothole!",
+    "welcomeSubtitle": "A community-driven platform to report potholes and improve road safety for everyone.",
+    "step1Title": "1. Spot a Pothole",
+    "step1Subtitle": "Find a pothole that needs fixing.",
+    "step2Title": "2. Snap a Photo",
+    "step2Subtitle": "Take a clear, geotagged picture.",
+    "step3Title": "3. Upload to Map",
+    "step3Subtitle": "Help us put it on the map for all to see.",
+    "motto": "Together, we can make our roads safer.",
+    "buttonText": "Let's Go!"
+  },
+  "HomePage": {
+    "reportButton": "Report a Pothole"
+  },
+  "UploadDisclaimer": {
+    "title": "Before you upload",
+    "description": "To accurately map the pothole, we need a photo with location data (geotag). Please ensure this is enabled in your camera settings before taking a picture.",
+    "agreeButton": "Continue",
+    "rule1": "Please upload <bold>clear photos of potholes only</bold>. No NSFW, offensive, or unrelated content.",
+    "rule2": "Avoid personal information like faces, license plates, or house numbers.",
+    "privacyAssuredTitle": "Your Privacy is Assured",
+    "privacyAssuredContent": "All location data and personal metadata are automatically stripped from images. Your uploads are completely anonymous."
+  },
+  "Header": {
+    "title": "Spothole"
+  },
+  "UploadPage": {
+    "title": "Upload your pothole image",
+    "geotagInfo": "Images you upload need to be GEOTAGGED. This will help us appropriately place your entry on the map. If you need help with this, kindly look at the FAQ below.",
+    "dropzone": "Click to upload or drag and drop",
+    "acceptedFiles": "Accepted: jpeg, jpg",
+    "uploading": "Uploading...",
+    "errorInvalidType": "Invalid file type. Please upload a JPEG or JPG image.",
+    "errorNoGeotag": "Image is not geotagged. Please enable geotagging in your camera settings.",
+    "errorPresignedUrl": "Failed to get pre-signed URL.",
+    "errorS3Upload": "Failed to upload to S3.",
+    "errorDbSave": "Failed to save pothole data.",
+    "errorUnknown": "An unknown error occurred.",
+    "faqTitle1": "How do I enable Geotagging on my iPhone?",
+    "faqContent1": "To enable geotagging on an iPhone, go to Settings > Privacy > Location Services. Make sure Location Services is on. Then, scroll down to Camera, tap on it, and select \"While Using the App\".",
+    "faqTitle2": "How do I enable Geotagging on my Android phone?",
+    "faqContent2": "To enable geotagging on an Android phone, open the Camera app settings. Look for an option called \"Location tags,\" \"Geotags,\" or similar, and make sure it's enabled. The exact steps may vary slightly depending on your phone's manufacturer.",
+    "faqTitle3": "Who runs this platform?",
+    "faqContent3": "This is a community-driven platform built to improve road safety for everyone. It is developed and maintained by Aadesh Kulkarni. You can reach out to him on LinkedIn."
+  }
+}

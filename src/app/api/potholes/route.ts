@@ -6,11 +6,17 @@ export async function GET() {
   await dbConnect();
 
   try {
-    const potholes = await Pothole.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(
-      { success: true, data: potholes },
-      { status: 200 }
-    );
+    const potholesFromDb = await Pothole.find({}).sort({ createdAt: -1 });
+    const potholes = potholesFromDb.map((p) => ({
+      id: p._id.toString(),
+      latitude: p.location.coordinates[1],
+      longitude: p.location.coordinates[0],
+      createdAt: p.createdAt,
+      imageUrl: p.imageUrl,
+      description: p.description,
+      status: p.status,
+    }));
+    return NextResponse.json(potholes);
   } catch (error) {
     console.log(error);
     return NextResponse.json(

@@ -1,11 +1,11 @@
 export interface Pothole {
-  _id: string;
-  location: {
-    type: 'Point';
-    coordinates: [number, number]; // [longitude, latitude]
-  };
-  description?: string;
+  id: string;
+  latitude: number;
+  longitude: number;
+  createdAt: Date;
   imageUrl: string;
-  severity: 'Minor' | 'Major' | 'Severe' | 'Critical';
-  createdAt: string;
+  // Optional fields that might be added later
+  description?: string | null;
+  userId?: string | null;
+  status?: string | null;
 }

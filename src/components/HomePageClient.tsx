@@ -1,9 +1,10 @@
 'use client';
 
-import type { Pothole } from '@/types/pothole';
+import { Pothole } from '@/types/pothole';
 import { AnimatePresence } from 'framer-motion';
 import { LatLngExpression } from 'leaflet';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -33,6 +34,15 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
   const [showUploadDisclaimer, setShowUploadDisclaimer] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('HomePage');
+
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+    if (!hasSeenIntro) {
+      setShowIntro(true);
+      localStorage.setItem('hasSeenIntro', 'true');
+    }
+  }, []);
 
   useEffect(() => {
     if (searchParams.get('upload') === 'success') {
@@ -110,15 +120,15 @@ const HomePageClient = ({ initialPotholes }: HomePageClientProps) => {
         onOpenChange={setShowUploadDisclaimer}
         onAgree={handleDisclaimerAgree}
       />
-      <div className="fixed bottom-8 left-1/2 z-[1000] -translate-x-1/2">
-          <Button
-            size="lg"
-            className="relative z-10 w-full cursor-pointer rounded-full border-4 border-gray-100 shadow-lg"
-            onClick={handleReportClick}
-          >
-            <PlusIcon className="h-4 w-4 stroke-white stroke-2" />
-            Report a Pothole
-          </Button>
+      <div className="fixed bottom-12 left-1/2 z-[1000] -translate-x-1/2">
+        <Button
+          size="lg"
+          className="relative z-10 w-full cursor-pointer rounded-full border-4 border-gray-900 py-6 shadow-lg transition-transform duration-150 ease-in-out active:scale-95 md:py-4"
+          onClick={handleReportClick}
+        >
+          <PlusIcon className="h-4 w-4 stroke-white stroke-2" />
+          {t('reportButton')}
+        </Button>
       </div>
     </main>
   );

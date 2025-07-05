@@ -1,19 +1,24 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from './LanguageSwitcher';
+
 interface HeaderProps {
   onLogoClick: () => void;
 }
 
 const Header = ({ onLogoClick }: HeaderProps) => {
+  const t = useTranslations('Header');
+
   return (
-    <header className="fixed top-0 left-0 z-[2000] p-4">
+    <header className="fixed top-0 left-0 z-[2000] flex w-full items-center justify-between bg-white p-4 shadow-lg md:bg-transparent md:shadow-none">
       <button
         onClick={onLogoClick}
-        className="flex items-center justify-end gap-1 rounded bg-white px-4 py-2 shadow-md"
+        className="flex items-end justify-end gap-1 rounded bg-transparent px-0 py-0 shadow-none md:bg-white md:px-4 md:py-2 md:shadow-md"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-8 w-8 animate-pulse text-sky-600"
+          className="h-8 w-8 text-sky-600 md:animate-pulse"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -23,10 +28,14 @@ const Header = ({ onLogoClick }: HeaderProps) => {
             clipRule="evenodd"
           />
         </svg>
-        <h1 className="animate-in text-2xl font-bold tracking-tight text-gray-900">
-          Spothole
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:animate-in">
+          {t('title')}
         </h1>
       </button>
+
+      <div className="rounded bg-transparent shadow-none md:bg-black/50 md:px-2 md:py-1 md:shadow-md">
+        <LanguageSwitcher />
+      </div>
     </header>
   );
 };

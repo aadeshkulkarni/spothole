@@ -3,9 +3,13 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
 
 import { Toaster } from '@/components/ui/sonner';
+import { routing } from '@/i18n/routing';
 import type { Metadata } from 'next';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import { notFound } from 'next/navigation';
+import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -53,16 +57,28 @@ export const metadata: Metadata = {
   manifest: '/manifest.ts',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
+  params: { locale: string };
+}) {
+  const { locale } = params;
+  // Validate that the incoming `locale` parameter is valid
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={inter.className}>
-        {children}
-        <Toaster />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+          <Toaster />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

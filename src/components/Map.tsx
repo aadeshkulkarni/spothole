@@ -1,23 +1,27 @@
 'use client';
 
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet/dist/leaflet.css';
-
 import { Pothole } from '@/types/pothole';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet/dist/leaflet.css';
 import { Info, Minus, PlusIcon, RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { useEffect, useRef, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  useMap
+} from 'react-leaflet';
 
 const redIcon = new L.Icon({
   iconUrl:
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  shadowUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
+  shadowUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   shadowSize: [41, 41],
 });
 
@@ -94,18 +98,9 @@ const CustomControls = ({
   zoom: number;
 }) => {
   const map = useMap();
-
-  const resetView = () => {
-    map.setView(center, zoom);
-  };
-
-  const zoomIn = () => {
-    map.zoomIn();
-  };
-
-  const zoomOut = () => {
-    map.zoomOut();
-  };
+  const resetView = () => map.setView(center, zoom);
+  const zoomIn = () => map.zoomIn();
+  const zoomOut = () => map.zoomOut();
 
   return (
     <div className="absolute right-4 bottom-4 z-[1000] flex flex-col items-end">
@@ -150,44 +145,47 @@ const Markers = ({
   const map = useMap();
 
   useEffect(() => {
+    // This will help us debug if potholes are being passed correctly
+    console.log('Potholes received by Markers component:', potholes);
+
     const markerClusterGroup = L.markerClusterGroup({
       iconCreateFunction: function (cluster) {
         const count = cluster.getChildCount();
         let size = 40;
         let className = 'marker-cluster-';
-        if (count < 10) {
-          className += 'small';
-        } else if (count < 100) {
+        if (count < 10) className += 'small';
+        else if (count < 100) {
           className += 'medium';
           size = 50;
         } else {
           className += 'large';
           size = 60;
         }
-
-        const icon = L.divIcon({
+        return L.divIcon({
           html: `<div><span>${count}</span></div>`,
           className: `marker-cluster ${className}`,
           iconSize: new L.Point(size, size),
         });
-        return icon;
       },
     });
 
-    potholes.forEach((pothole) => {
-      const marker = L.marker(
-        [pothole.location.coordinates[1], pothole.location.coordinates[0]],
-        { icon: redIcon }
-      );
-      marker.on('click', () => {
-        onMarkerClick(pothole);
-        // Center the view on the marker when clicked, with a slight offset to account for the popup
-        const targetPoint = map.project(marker.getLatLng(), map.getZoom());
-        const targetLatLng = map.unproject(targetPoint);
-        map.flyTo(targetLatLng, map.getZoom());
+    potholes
+      .filter(
+        (pothole) =>
+          pothole &&
+          typeof pothole.latitude === 'number' &&
+          typeof pothole.longitude === 'number',
+      )
+      .forEach((pothole) => {
+        const marker = L.marker([pothole.latitude, pothole.longitude], {
+          icon: redIcon,
+        }).on('click', () => {
+          onMarkerClick(pothole);
+          const targetLatLng = L.latLng(pothole.latitude, pothole.longitude);
+          map.flyTo(targetLatLng, map.getZoom());
+        });
+        markerClusterGroup.addLayer(marker);
       });
-      markerClusterGroup.addLayer(marker);
-    });
 
     map.addLayer(markerClusterGroup);
 
@@ -199,30 +197,65 @@ const Markers = ({
   return null;
 };
 
-interface MapProps {
-  potholes: Pothole[];
-  onMarkerClick: (pothole: Pothole) => void;
-  initialCenter: LatLngExpression;
+export interface MapHandles {
+  panTo: (position: LatLngExpression) => void;
+  refresh: () => void;
 }
 
-const Map = ({ potholes, onMarkerClick, initialCenter }: MapProps) => {
+interface MapProps {
+  potholes: Pothole[];
+  onMapReady: (methods: MapHandles) => void;
+  onMarkerClick: (pothole: Pothole) => void;
+  initialCenter: LatLngExpression;
+  locale: string;
+}
+
+export const Map = ({
+  potholes,
+  onMapReady,
+  onMarkerClick,
+  initialCenter,
+  locale,
+}: MapProps) => {
+  const mapRef = useRef<L.Map | null>(null);
   const initialZoom = 14;
+  const indiaBounds = L.latLngBounds(
+    L.latLng(6, 68), // Southwest
+    L.latLng(37, 98), // Northeast
+  );
+
+  useEffect(() => {
+    if (mapRef.current) {
+      onMapReady({
+        panTo: (position) => {
+          mapRef.current?.panTo(position, { animate: true, duration: 1 });
+        },
+        refresh: () => {
+          // Placeholder for manual refresh
+        },
+      });
+    }
+  }, [onMapReady, mapRef]);
+
+  const tileUrl =
+    'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png?lang=' + locale;
+  const attribution =
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>';
 
   return (
     <MapContainer
+      ref={mapRef}
       center={initialCenter}
       zoom={initialZoom}
       zoomControl={false}
       style={{ height: '100vh', width: '100%' }}
+      minZoom={5}
+      maxBounds={indiaBounds}
+      maxBoundsViscosity={1.0}
     >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
+      <TileLayer url={tileUrl} attribution={attribution} />
       <Markers potholes={potholes} onMarkerClick={onMarkerClick} />
       <CustomControls center={initialCenter} zoom={initialZoom} />
     </MapContainer>
   );
 };
-
-export default Map;

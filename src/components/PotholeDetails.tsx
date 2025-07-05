@@ -13,7 +13,7 @@ const PotholeDetails = ({ pothole, onClose }: PotholeDetailsProps) => {
   const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
   return (
-    <div className="fixed top-4 right-4 left-1/2 z-[1100] w-[350px] -translate-x-1/2 rounded-lg bg-white/90 p-4 text-gray-800 shadow-2xl backdrop-blur-sm md:left-auto md:w-[400px] md:translate-x-0">
+    <div className="fixed top-1/2 left-1/2 z-[1100] w-[90vw] max-w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white/90 p-4 text-gray-800 shadow-2xl backdrop-blur-sm">
       <button
         onClick={onClose}
         className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -36,14 +36,15 @@ const PotholeDetails = ({ pothole, onClose }: PotholeDetailsProps) => {
       </a>
 
       <div className="flex flex-col gap-4">
-        <p>
-          <strong>Latitude:</strong>{' '}
-          {pothole.location.coordinates[1].toFixed(6)}
-        </p>
-        <p>
-          <strong>Longitude:</strong>{' '}
-          {pothole.location.coordinates[0].toFixed(6)}
-        </p>
+        <a
+          href={`https://www.google.com/maps?q=${pothole.latitude},${pothole.longitude}&z=19`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-blue-500 hover:underline"
+        >
+          Lat: {pothole.latitude.toFixed(5)}, Lng:{' '}
+          {pothole.longitude.toFixed(5)}
+        </a>
         <p>
           <strong>Added:</strong> {formattedDate}
         </p>

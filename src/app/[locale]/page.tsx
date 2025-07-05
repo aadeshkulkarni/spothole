@@ -15,9 +15,21 @@ async function getPotholes() {
   noStore();
   await dbConnect();
   try {
-    const potholes = await Pothole.find({}).sort({ createdAt: -1 }).lean();
-    // Mongoose documents are not plain objects, so we need to serialize them
-    return JSON.parse(JSON.stringify(potholes));
+    const potholesFromDb = await Pothole.find({})
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const potholes = potholesFromDb.map((p: any) => ({
+      id: p._id.toString(),
+      latitude: p.location.coordinates[1],
+      longitude: p.location.coordinates[0],
+      createdAt: p.createdAt.toString(),
+      imageUrl: p.imageUrl,
+      description: p.description,
+      status: p.status,
+    }));
+
+    return potholes;
   } catch (error) {
     console.log('Failed to fetch potholes for server component', error);
     return [];

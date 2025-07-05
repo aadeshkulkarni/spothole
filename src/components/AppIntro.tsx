@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Camera, MapPin, UploadCloud, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from './ui/button';
 
 interface AppIntroProps {
@@ -9,6 +10,8 @@ interface AppIntroProps {
 }
 
 const AppIntro = ({ onClose }: AppIntroProps) => {
+  const t = useTranslations('AppIntro');
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -20,7 +23,7 @@ const AppIntro = ({ onClose }: AppIntroProps) => {
         initial={{ scale: 0.9, y: -20 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full max-w-2xl rounded-lg bg-white p-4 text-center shadow-xl sm:p-8"
+        className="relative w-full max-w-2xl rounded-lg bg-white p-4 text-center shadow-xl sm:p-6"
       >
         <button
           onClick={onClose}
@@ -30,56 +33,53 @@ const AppIntro = ({ onClose }: AppIntroProps) => {
           <X size={24} />
         </button>
 
-        <h1 className="mb-4 text-3xl font-bold text-gray-800 sm:text-4xl">
-          Welcome to Spothole!
+        <h1 className="mb-2 text-2xl font-bold text-gray-800 sm:mb-4 sm:text-4xl">
+          {t('welcomeTitle')}
         </h1>
-        <p className="mb-8 text-base text-gray-600 sm:text-lg">
-          A community-driven platform to report potholes and improve road safety
-          for everyone.
-        </p>
+        <p className="mb-6 text-base text-gray-600">{t('welcomeSubtitle')}</p>
 
-        <div className="mb-10 grid grid-cols-1 gap-6 text-left sm:gap-8 md:grid-cols-3">
+        <div className="mb-6 grid grid-cols-1 gap-4 text-left sm:mb-8 sm:gap-6 md:grid-cols-3">
           <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
-              <MapPin size={28} />
+            <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+              <MapPin size={24} />
             </div>
-            <h3 className="mb-2 text-base font-semibold sm:text-lg">
-              1. Spot a Pothole
+            <h3 className="mb-1 text-base font-semibold sm:text-lg">
+              {t('step1Title')}
             </h3>
             <p className="text-sm text-gray-500 sm:text-base">
-              Find a pothole that needs fixing.
+              {t('step1Subtitle')}
             </p>
           </div>
           <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
-              <Camera size={28} />
+            <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+              <Camera size={24} />
             </div>
-            <h3 className="mb-2 text-base font-semibold sm:text-lg">
-              2. Snap a Photo
+            <h3 className="mb-1 text-base font-semibold sm:text-lg">
+              {t('step2Title')}
             </h3>
             <p className="text-sm text-gray-500 sm:text-base">
-              Take a clear, geotagged picture.
+              {t('step2Subtitle')}
             </p>
           </div>
           <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-sky-600 sm:h-16 sm:w-16">
-              <UploadCloud size={28} />
+            <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+              <UploadCloud size={24} />
             </div>
-            <h3 className="mb-2 text-base font-semibold sm:text-lg">
-              3. Upload to Map
+            <h3 className="mb-1 text-base font-semibold sm:text-lg">
+              {t('step3Title')}
             </h3>
             <p className="text-sm text-gray-500 sm:text-base">
-              Help us put it on the map for all to see.
+              {t('step3Subtitle')}
             </p>
           </div>
         </div>
 
         <p className="mb-6 text-lg font-semibold text-gray-700 sm:text-xl">
-          Together, we can make our roads safer.
+          {t('motto')}
         </p>
 
         <Button onClick={onClose} size="lg" className="rounded-full">
-          Let's Go!
+          {t('buttonText')}
         </Button>
       </motion.div>
     </motion.div>

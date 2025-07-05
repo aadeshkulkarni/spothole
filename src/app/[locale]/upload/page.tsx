@@ -1,14 +1,15 @@
 'use client';
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from '@/components/ui/accordion';
 import UploadDisclaimer from '@/components/UploadDisclaimer';
 import ExifReader from 'exifreader';
 import { UploadCloud } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -20,6 +21,7 @@ const UploadPageClient = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(!disclaimerAgreed);
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const t = useTranslations('UploadPage');
 
   const onDrop = async (acceptedFiles: File[]) => {
     setError(null);
@@ -31,7 +33,7 @@ const UploadPageClient = () => {
 
     // 1. Validate file type
     if (!['image/jpeg', 'image/jpg'].includes(file.type)) {
-      setError('Invalid file type. Please upload a JPEG or JPG image.');
+      setError(t('errorInvalidType'));
       return;
     }
 
@@ -44,9 +46,7 @@ const UploadPageClient = () => {
       const lon = tags.GPSLongitude;
 
       if (!lat || !lon) {
-        setError(
-          'Image is not geotagged. Please enable geotagging in your camera settings.'
-        );
+        setError(t('errorNoGeotag'));
         setUploading(false);
         return;
       }
@@ -57,7 +57,7 @@ const UploadPageClient = () => {
       });
 
       if (!presignedUrlResponse.ok) {
-        throw new Error('Failed to get pre-signed URL.');
+        throw new Error(t('errorPresignedUrl'));
       }
 
       const { url, fields, publicUrl } = await presignedUrlResponse.json();
@@ -73,7 +73,7 @@ const UploadPageClient = () => {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error('Failed to upload to S3');
+        throw new Error(t('errorS3Upload'));
       }
 
       // 5. Save to database
@@ -90,12 +90,12 @@ const UploadPageClient = () => {
       });
 
       if (!dbResponse.ok) {
-        throw new Error('Failed to save pothole data.');
+        throw new Error(t('errorDbSave'));
       }
 
       router.push('/?upload=success');
     } catch (e: any) {
-      setError(e.message || 'An unknown error occurred.');
+      setError(e.message || t('errorUnknown'));
     } finally {
       setUploading(false);
     }
@@ -126,12 +126,10 @@ const UploadPageClient = () => {
           <div className="flex flex-grow items-center justify-center">
             <div className="mx-auto w-full max-w-[500px]">
               <div className="mb-8 text-center">
-                <h1 className="text-2xl font-bold">Upload your pothole image</h1>
+                <h1 className="text-2xl font-bold">{t('title')}</h1>
                 <div className="mt-4 border-l-4 border-sky-200 bg-blue-50 p-4 text-sky-800">
                   <p>
-                    Images you upload needs to be <strong>GEOTAGGED</strong>.
-                    This will help us appropriately place your entry on the map.
-                    If you need help with this, kindly look at the FAQ below.
+                    <strong>{t('geotagInfo')}</strong>
                   </p>
                 </div>
               </div>
@@ -144,15 +142,13 @@ const UploadPageClient = () => {
                   }`}
                 >
                   {uploading ? (
-                    <p>Uploading...</p>
+                    <p>{t('uploading')}</p>
                   ) : (
                     <>
                       <UploadCloud className="h-20 w-20 text-gray-400" />
-                      <p className="text-gray-500">
-                        Click to upload or drag and drop
-                      </p>
+                      <p className="text-gray-500">{t('dropzone')}</p>
                       <p className="text-xs text-gray-400">
-                        Accepted: jpeg, jpg
+                        {t('acceptedFiles')}
                       </p>
                     </>
                   )}
@@ -165,34 +161,17 @@ const UploadPageClient = () => {
           <div className="mx-auto w-full max-w-[500px] flex-shrink-0 pb-8">
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger>
-                  How do I enable Geotagging on my iPhone?
-                </AccordionTrigger>
-                <AccordionContent>
-                  To enable geotagging on an iPhone, go to Settings &gt; Privacy
-                  &gt; Location Services. Make sure Location Services is on.
-                  Then, scroll down to Camera, tap on it, and select "While
-                  Using the App".
-                </AccordionContent>
+                <AccordionTrigger>{t('faqTitle1')}</AccordionTrigger>
+                <AccordionContent>{t('faqContent1')}</AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>
-                  How do I enable Geotagging on my Android phone?
-                </AccordionTrigger>
-                <AccordionContent>
-                  To enable geotagging on an Android phone, open the Camera app
-                  settings. Look for an option called "Location tags,"
-                  "Geotags," or similar, and make sure it's enabled. The exact
-                  steps may vary slightly depending on your phone's
-                  manufacturer.
-                </AccordionContent>
+                <AccordionTrigger>{t('faqTitle2')}</AccordionTrigger>
+                <AccordionContent>{t('faqContent2')}</AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
-                <AccordionTrigger>Who runs this platform?</AccordionTrigger>
+                <AccordionTrigger>{t('faqTitle3')}</AccordionTrigger>
                 <AccordionContent>
-                  This is a community-driven platform built to improve road
-                  safety for everyone. It is developed and maintained by Aadesh
-                  Kulkarni. You can reach out to him on{' '}
+                  {t('faqContent3')}
                   <a
                     href="https://www.linkedin.com/in/aadeshkulkarni"
                     target="_blank"
