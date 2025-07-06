@@ -1,13 +1,13 @@
 'use client';
 
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from '@/components/ui/accordion';
 import UploadDisclaimer from '@/components/UploadDisclaimer';
-import ExifReader from 'exifreader';
+import * as ExifReader from 'exifreader';
 import { UploadCloud } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -42,10 +42,44 @@ const UploadPageClient = () => {
     try {
       // 2. Validate geotag
       const tags = await ExifReader.load(file);
-      const lat = tags.GPSLatitude;
-      const lon = tags.GPSLongitude;
+      console.log('EXIF tags:', tags);
+      const latTag = tags.GPSLatitude;
+      const lonTag = tags.GPSLongitude;
+      const latRef = tags.GPSLatitudeRef;
+      const lonRef = tags.GPSLongitudeRef;
 
-      if (!lat || !lon) {
+      if (!latTag || !lonTag || !latRef || !lonRef) {
+        setError(t('errorNoGeotag'));
+        setUploading(false);
+        return;
+      }
+
+      const convertDMSToDD = (
+        dms: [number, number][],
+        ref: string,
+      ): number => {
+        const degrees = dms[0][0] / dms[0][1];
+        const minutes = dms[1][0] / dms[1][1];
+        const seconds = dms[2][0] / dms[2][1];
+
+        let dd = degrees + minutes / 60 + seconds / 3600;
+
+        if (ref === 'S' || ref === 'W') {
+          dd = dd * -1;
+        }
+        return dd;
+      };
+
+      const latitude = convertDMSToDD(
+        latTag.value as [number, number][],
+        latRef.value as string,
+      );
+      const longitude = convertDMSToDD(
+        lonTag.value as [number, number][],
+        lonRef.value as string,
+      );
+
+      if (isNaN(latitude) || isNaN(longitude)) {
         setError(t('errorNoGeotag'));
         setUploading(false);
         return;
@@ -82,8 +116,8 @@ const UploadPageClient = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           imageUrl: publicUrl,
-          latitude: lat.description,
-          longitude: lon.description,
+          latitude: latitude,
+          longitude: longitude,
           description: 'A new pothole report.',
           severity: 'Minor', // Default severity
         }),
